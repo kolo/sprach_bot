@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+lib_path = File.expand_path('../lib', File.dirname(__FILE__))
+$LOAD_PATH.unshift(lib_path)
+
+require 'bundler/setup'
+require 'dotenv'
+
+Dotenv.load
+
+require 'telegram/client'
+
+client = Telegram::Client.new(ENV['telegram_api_token'])
+p client.get_me
