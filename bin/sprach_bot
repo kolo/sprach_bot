@@ -8,7 +8,8 @@ require 'dotenv'
 
 Dotenv.load
 
-require 'telegram/client'
+require 'sprach_bot'
 
-client = Telegram::Client.new(ENV['telegram_api_token'])
+http_client = Telegram::HTTPClient.new(ENV['telegram_api_token'])
+client = Telegram::Client.new(http_client)
 p client.get_me

@@ -1,23 +1,21 @@
-require 'net/http'
-require 'json'
-
 module Telegram
-  API_HOST = 'api.telegram.org'
-
   class Client
-    def initialize(token)
-      @token = token
+    def initialize(http_client)
+      @http_client = http_client
     end
 
     def get_me
-      Net::HTTP.start(API_HOST, 443, use_ssl: true) do |http|
-        response = http.get("/bot#{token}/getMe")
-        JSON.parse(response.body)
-      end
+      result = http_client.get("getMe")
+      Telegram::User.new(
+        result[:id],
+        result[:username],
+        result[:first_name],
+        result[:last_name]
+      )
     end
 
     private
 
-    attr_reader :token
+    attr_reader :http_client
   end
 end

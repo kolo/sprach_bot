@@ -1,19 +1,20 @@
 require 'spec_helper'
 
-require 'telegram/client'
-
 RSpec.describe Telegram::Client do
   let(:token) { '000:telegram_api_token' }
-  let(:json_response) { '{}' }
+  let(:http_client) { double('HTTPClient') }
+  let(:client) { described_class.new(http_client) }
 
   describe '#get_me' do
-    it 'returns hash' do
-      stub_request(:get, "https://api.telegram.org/bot#{token}/getMe")
-        .to_return(status: 200, body: json_response)
-      client = described_class.new(token)
-      response = client.get_me
+    let(:result) { { id: 181935498, username: 'sprach_bot' } }
+    it 'returns instance of User' do
+      allow(http_client) .to receive(:get).and_return(result)
 
-      expect(response).to be_instance_of(Hash)
+      user = client.get_me
+
+      expect(user).to be_instance_of(Telegram::User)
+      expect(user.id).to eq result[:id]
+      expect(user.username).to eq result[:username]
     end
   end
 end
