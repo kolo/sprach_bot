@@ -5,13 +5,12 @@ module Telegram
     end
 
     def get_me
-      result = http_client.get("getMe")
-      Telegram::User.new(
-        result[:id],
-        result[:username],
-        result[:first_name],
-        result[:last_name]
-      )
+      Telegram::User.new(http_client.get("getMe"))
+    end
+
+    def get_updates
+      result = http_client.get("getUpdates")
+      p result
     end
 
     private

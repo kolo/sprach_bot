@@ -6,10 +6,14 @@ $LOAD_PATH.unshift(lib_path)
 require 'bundler/setup'
 require 'dotenv'
 
+require 'sprach_bot'
+
 Dotenv.load
 
-require 'sprach_bot'
+trap('INT') do
+  exit
+end
 
 http_client = Telegram::HTTPClient.new(ENV['telegram_api_token'])
 client = Telegram::Client.new(http_client)
-p client.get_me
+client.get_updates

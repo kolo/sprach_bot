@@ -8,7 +8,7 @@ RSpec.describe Telegram::Client do
   describe '#get_me' do
     let(:result) { { id: 181935498, username: 'sprach_bot' } }
     it 'returns instance of User' do
-      allow(http_client) .to receive(:get).and_return(result)
+      allow(http_client).to receive(:get).and_return(result)
 
       user = client.get_me
 
