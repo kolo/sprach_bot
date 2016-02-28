@@ -1,3 +1,4 @@
+require 'telegram/type/dsl'
 require 'telegram/type/field'
 
 module Telegram
@@ -9,31 +10,14 @@ module Telegram
   end
 
   class Type
-    class << self
-      attr_accessor :fields
+    extend DSL
 
-      def define_fields(&block)
-        instance_eval(&block)
-      end
-
-      def field(name, opts = {})
-        field = Field.new(name: name, opts: opts)
-        define_accessor_methods(field)
-
-        fields << field
-      end
-
-      def fields
-        @fields ||= []
-      end
-
-      def define_accessor_methods(field)
-        attr_accessor(field.name)
-        private(field.writer_method)
-      end
+    def self.array(values)
+      values.collect { |attrs| new(attrs) }
     end
 
     def initialize(attrs)
+      attrs.symbolize_keys!
       self.class.fields.each do |field|
         set_value(field, attrs[field.name])
       end

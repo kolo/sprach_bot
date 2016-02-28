@@ -5,12 +5,11 @@ module Telegram
     end
 
     def get_me
-      Telegram::User.new(http_client.get("getMe"))
+      User.new(http_client.get("getMe"))
     end
 
     def get_updates
-      result = http_client.get("getUpdates")
-      p result
+      Update.array(http_client.get("getUpdates"))
     end
 
     private

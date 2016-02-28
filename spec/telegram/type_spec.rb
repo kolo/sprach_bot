@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'User defined type' do
+RSpec.describe Telegram::Type do
   let(:class_name) { 'Note' }
   let(:klass) { Telegram.const_get(class_name) }
 
@@ -10,15 +10,6 @@ RSpec.describe 'User defined type' do
       field :text, optional: true
       field :author, type: 'User'
     end
-  end
-
-  it 'has defined fields' do
-    instance_methods= Telegram.const_get(class_name).instance_methods
-    expect(instance_methods).to include(:title, :text)
-  end
-
-  it 'raises error if required field is not set' do
-    expect { klass.new }.to raise_error ArgumentError
   end
 
   let(:attributes) do
@@ -32,11 +23,32 @@ RSpec.describe 'User defined type' do
     }
   end
 
-  it 'has values for given properties' do
-    obj = klass.new(attributes)
-    expect(obj.title).to eq attributes[:title]
-    expect(obj.text).to eq attributes[:text]
-    expect(obj.author).to be_instance_of(Telegram::User)
+  describe 'an instance of user defined type' do
+
+    it 'has defined fields' do
+      instance_methods= Telegram.const_get(class_name).instance_methods
+      expect(instance_methods).to include(:title, :text)
+    end
+
+    it 'raises error if required field is not set' do
+      expect { klass.new }.to raise_error ArgumentError
+    end
+
+    it 'has values for given properties' do
+      obj = klass.new(attributes)
+      expect(obj.title).to eq attributes[:title]
+      expect(obj.text).to eq attributes[:text]
+      expect(obj.author).to be_instance_of(Telegram::User)
+    end
+  end
+
+  describe '.array' do
+    let(:result) { klass.array([attributes]) }
+
+    it 'returns array of object' do
+      expect(result).to be_instance_of(Array)
+      expect(result[0]).to be_instance_of(klass)
+    end
   end
 
   after(:each) do

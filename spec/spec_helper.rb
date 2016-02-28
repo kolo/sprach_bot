@@ -1,6 +1,8 @@
 require 'byebug'
 require 'sprach_bot'
 
+require 'support/http_responses'
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
